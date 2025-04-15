@@ -22,6 +22,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "howlast"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b66b2e8e8f7d7f0003aca9047191a0525e2b367d1db04ddf83c2e020160ed7e4"
+
+[[package]]
 name = "libm"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -60,6 +66,7 @@ name = "rustedbytes-pi"
 version = "0.1.0"
 dependencies = [
  "bigdecimal",
+ "howlast",
  "num-bigint",
  "num-traits",
 ]
