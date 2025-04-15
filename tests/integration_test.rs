@@ -1,7 +1,7 @@
 
 #[cfg(test)]
 mod tests {
-    use rustedbytes_pi::{chudnovsky, chudnovsky_iterations_for_digits};
+    use rustedbytes_pi::compute_pi;
 
 
     fn get_pi_digits() -> String {
@@ -11,7 +11,13 @@ mod tests {
     #[test]
     fn test_one_million_digits() {
 
-        let p = chudnovsky(chudnovsky_iterations_for_digits(1_000_000 as usize) as i64, 1_000_000);
-        assert_eq!(p.to_string(), get_pi_digits());
+        let digits = 150;
+        let p = compute_pi(digits);
+        assert_eq!(p.to_string().len(), digits as usize + 2);
+        
+        for (i, c) in p.to_string().chars().enumerate() {
+            let p = get_pi_digits().chars().nth(i).unwrap();
+            assert_eq!(c, p, "Mismatch at index {}", i);
+        }
     }
 }

@@ -5,11 +5,8 @@ use rustedbytes_pi::compute_pi;
 
 
 fn main() {
+    let digits = 100; // Cambia qui per più precisione
+    let pi = compute_pi(digits);
 
-    let digits = 1_000_000_u64;
-
-    howlast::howlast!(ellapsed_time, result => { compute_pi(digits) });
-
-    println!("π ≈ {}", result);
-    println!("Elapsed time: {:?}", ellapsed_time);
+    println!("π con {} cifre decimali:\n{}", digits, pi);
 }
