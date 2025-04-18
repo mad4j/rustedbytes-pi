@@ -132,6 +132,9 @@ dependencies = [
  "dashu",
  "dashu-base",
  "dashu-float",
+ "dashu-int",
+ "dashu-macros",
+ "dashu-ratio",
 ]
 
 [[package]]
