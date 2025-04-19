@@ -22,6 +22,10 @@ struct Cli {
     /// Verify the computed digits against a reference
     #[arg(short, long, default_value_t = false)]
     verify: bool,
+
+    /// Avoid to print the computed digits
+    #[arg(long, default_value_t = false)]
+    no_dump: bool,
 }
 
 
@@ -48,7 +52,9 @@ fn main() {
 
     howlast::howlast!(compute_time, pi => { compute_pi(args.digits) });
 
-    //println!("{}", pi);
+    if !args.no_dump {
+        println!("{}", pi);
+    }
 
     if args.time {
         println!("Compute Time: {:?}", compute_time);
