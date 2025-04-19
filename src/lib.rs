@@ -5,9 +5,9 @@ use dashu_macros::{dbig, ibig};
 
 /*
 https://en.wikipedia.org/wiki/Chudnovsky_algorithm
+
 #Note: For extreme calculations, other code can be used to run on a GPU, which is much faster than this.
 import decimal
-
 
 def binary_split(a, b):
     if b == a + 1:
@@ -40,22 +40,25 @@ for n in range(2,10):
 
 
 pub fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
-
-    if b == a+1 {
+    if b - a == 1 {
         let a = IBig::from(a);
-        let pab =  -(ibig!(6) * &a - ibig!(5)) * (ibig!(2) * &a - ibig!(1)) * (ibig!(6) * &a - ibig!(1));
-        let qab = ibig!(10939058860032000) * &a.pow(3);
+        let pab = -(ibig!(6) * &a - ibig!(5)) * (ibig!(2) * &a - ibig!(1)) * (ibig!(6) * &a - ibig!(1));
+        let qab = ibig!(10939058860032000) * a.pow(3);
         let rab = &pab * (ibig!(545140134) * &a + ibig!(13591409));
-        return (pab, qab, rab);
+        (pab, qab, rab)
     } else {
         let m = (a + b) / 2;
-        let (pam, qam, ram) = binary_split(a, m);
-        let (pmb, qmb, rmb) = binary_split(m, b);
+
+        // Use rayon for parallel computation to improve performance
+        let ((pam, qam, ram), (pmb, qmb, rmb)) = rayon::join(
+            || binary_split(a, m),
+            || binary_split(m, b),
+        );
 
         let pab = &pam * &pmb;
         let qab = &qam * &qmb;
         let rab = &qmb * &ram + &pam * &rmb;
-        return (pab, qab, rab);
+        (pab, qab, rab)
     }
 }
 
@@ -68,9 +71,11 @@ pub fn chudnovsky(iterations: usize, digits: usize) -> FBig<Zero, 10> {
     let precision = digits+2;
 
     let context = Context::<Zero>::new(precision);
-    let q = context.sqrt(dbig!(10005).repr()).value();
 
-    let (_p1n, q1n, r1n) = binary_split(1, iterations);
+    let (q, (_p1n, q1n, r1n)) = rayon::join(
+        || context.sqrt(dbig!(10005).repr()).value(), 
+        || binary_split(1, iterations),
+    );
 
     let n = ibig!(426880) * &q * &q1n;
     let d = ibig!(13591409) * &q1n + &r1n;
