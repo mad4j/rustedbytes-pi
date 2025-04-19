@@ -40,24 +40,33 @@ for n in range(2,10):
 
 
 pub fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
+    // Base case: if the range contains only one element
     if b - a == 1 {
         let a = IBig::from(a);
+
+        // Compute Pab, Qab, and Rab for the single element
         let pab = -(ibig!(6) * &a - ibig!(5)) * (ibig!(2) * &a - ibig!(1)) * (ibig!(6) * &a - ibig!(1));
         let qab = ibig!(10939058860032000) * a.pow(3);
         let rab = &pab * (ibig!(545140134) * &a + ibig!(13591409));
+
+        // Return the computed values
         (pab, qab, rab)
     } else {
+        // Recursive case: split the range into two halves
         let m = (a + b) / 2;
 
         // Use rayon for parallel computation to improve performance
         let ((pam, qam, ram), (pmb, qmb, rmb)) = rayon::join(
-            || binary_split(a, m),
-            || binary_split(m, b),
+            || binary_split(a, m), // Compute for the left half
+            || binary_split(m, b), // Compute for the right half
         );
 
+        // Combine the results from the two halves
         let pab = &pam * &pmb;
         let qab = &qam * &qmb;
         let rab = &qmb * &ram + &pam * &rmb;
+
+        // Return the combined results
         (pab, qab, rab)
     }
 }
