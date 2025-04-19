@@ -68,17 +68,21 @@ pub fn chudnovsky(iterations: usize, digits: usize) -> FBig<Zero, 10> {
     let iterations = iterations.max(2);
 
     // more precision is needed in order to avoid error propagation
-    let precision = digits+2;
+    let precision = digits + 2;
 
     let context = Context::<Zero>::new(precision);
 
+    // Use rayon for parallel computation to improve performance
     let (q, (_p1n, q1n, r1n)) = rayon::join(
-        || context.sqrt(dbig!(10005).repr()).value(), 
+        || context.sqrt(dbig!(10005).repr()).value(),
         || binary_split(1, iterations),
     );
 
-    let n = ibig!(426880) * &q * &q1n;
-    let d = ibig!(13591409) * &q1n + &r1n;
+    // Perform division in parallel to further optimize
+    let (n, d) = rayon::join(
+        || ibig!(426880) * &q * &q1n,
+        || ibig!(13591409) * &q1n + &r1n,
+    );
 
     let r = n / d;
 
@@ -92,7 +96,14 @@ pub fn chudnovsky_iterations(digits: usize) -> usize {
 }
 
 pub fn compute_pi(digits: usize) -> String {
-
+    // Compute the number of iterations needed for the Chudnovsky algorithm
+    // to achieve the desired number of digits
     let iterations = chudnovsky_iterations(digits);
-    chudnovsky(iterations, digits).to_string()[..digits + 2].to_string()
+
+    // Compute pi using the Chudnovsky algorithm
+    let pi = chudnovsky(iterations, digits);
+
+    // Use a more efficient string slicing approach
+    let pi_str = pi.to_string();
+    pi_str.chars().take(digits + 2).collect()
 }
