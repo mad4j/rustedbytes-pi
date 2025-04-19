@@ -64,10 +64,10 @@ pub fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
 
 pub fn chudnovsky(iterations: usize, digits: usize) -> FBig<Zero, 10> {
 
-    // ensure at least 2 iterations to get a valid result
+    // Ensure at least 2 iterations to get a valid result
     let iterations = iterations.max(2);
 
-    // more precision is needed in order to avoid error propagation
+    // More precision is needed in order to avoid error propagation
     let precision = digits + 2;
 
     let context = Context::<Zero>::new(precision);
@@ -90,7 +90,7 @@ pub fn chudnovsky(iterations: usize, digits: usize) -> FBig<Zero, 10> {
 }
 
 pub fn chudnovsky_iterations(digits: usize) -> usize {
-    // Ogni iterazione dà circa 14.181647462 cifre decimali
+    // Each iteration gives approximately 14.181647462 decimal digits
     const DIGITS_PER_TERM: f64 = 14.181647462;
     ((digits as f64) / DIGITS_PER_TERM).ceil() as usize
 }
