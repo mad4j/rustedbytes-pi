@@ -1,6 +1,8 @@
 #Note: For extreme calculations, other code can be used to run on a GPU, which is much faster than this.
 import decimal
 
+import sys
+sys.set_int_max_str_digits(0)
 
 def binary_split(a, b):
     if b == a + 1:
@@ -21,7 +23,12 @@ def binary_split(a, b):
 def chudnovsky(n):
     """Chudnovsky algorithm."""
     P1n, Q1n, R1n = binary_split(1, n)
+    
+    print(f"n = {(426880 * decimal.Decimal(10005).sqrt() * Q1n)}")
+    print(f"d = {(13591409*Q1n + R1n)}")
+    
     return (426880 * decimal.Decimal(10005).sqrt() * Q1n) / (13591409*Q1n + R1n)
 
 decimal.getcontext().prec = 105 # number of digits of decimal precision
 print(f"1 = {chudnovsky(105)}")  # 3.141592653589793238462643384
+

@@ -1,17 +1,35 @@
-use dashu_float::{round::mode::HalfEven, Context, DBig};
 
+
+use rustedbytes_pi::compute_pi;
+use clap::Parser;
+
+
+fn _get_pi_digits() -> String {
+    include_str!("../tests/pi_digits.txt").to_string()
+}
+
+#[derive(Parser)]
+#[command(name = "RustedBytes Pi")]
+#[command(about = "Computes digits of Pi")]
+#[command(long_about = "Computes digits of Pi using the Chudnovsky algorithm")]
+#[command(version = "1.0")]
+#[command(author = "Daniele Olmisani <daniele.olmisani@gmail.com>")]
+struct Cli {
+    /// Number of digits to compute
+    #[arg(short, long, default_value_t = 1_000_000)]
+    digits: usize,
+
+    /// Print the time taken to compute the digits
+    #[arg(short, long, default_value_t = false)]
+    time: bool,
+}
 
 fn main() {
-    //let digits = 100;
-    //let pi = compute_pi(digits);
-    //println!("π con {digits} cifre:\n{:.100}", pi);
+    let args = Cli::parse();
 
-    let precision = 100;
-    let context = Context::<HalfEven>::new(precision);
+    howlast::howlast!(compute_time, pi => { compute_pi(args.digits) });
 
-    let a = DBig::from(10005);
+    println!("{}", pi);
+    println!("Compute Time: {:?}", compute_time);
 
-    let q = context.sqrt(a.repr());
-    
-    println!("sqrt(10005) = {}", q.value());
 }

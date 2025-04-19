@@ -6,7 +6,8 @@ edition = "2024"
 [dependencies]
 dashu = "0.4"
 dashu-float = "0.4"
-dashu-ratio = "0.4"
 dashu-macros = "0.4"
 dashu-int = "0.4.1"
 dashu-base = "0.4.1"
+howlast = "0.1.1"
+clap = { version = "4.5.37", features = ["derive"] }

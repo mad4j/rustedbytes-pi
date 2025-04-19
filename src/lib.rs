@@ -1,9 +1,10 @@
 use dashu::integer::IBig;
-use dashu_float::round::mode::HalfAway;
-use dashu_float::{Context, DBig};
+use dashu_float::round::mode::Zero;
+use dashu_float::{Context, FBig};
 use dashu_macros::{dbig, ibig};
 
 /*
+https://en.wikipedia.org/wiki/Chudnovsky_algorithm
 #Note: For extreme calculations, other code can be used to run on a GPU, which is much faster than this.
 import decimal
 
@@ -38,13 +39,13 @@ for n in range(2,10):
  */
 
 
-fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
+pub fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
 
     if b == a+1 {
         let a = IBig::from(a);
-        let pab =  -(ibig!(6) * &a - ibig!(5)) * (2 * &a - 1) * (6 * &a - 1);
+        let pab =  -(ibig!(6) * &a - ibig!(5)) * (ibig!(2) * &a - ibig!(1)) * (ibig!(6) * &a - ibig!(1));
         let qab = ibig!(10939058860032000) * &a.pow(3);
-        let rab = &pab * (ibig!(13591409) + ibig!(545140134 )* &a);
+        let rab = &pab * (ibig!(545140134) * &a + ibig!(13591409));
         return (pab, qab, rab);
     } else {
         let m = (a + b) / 2;
@@ -58,12 +59,17 @@ fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
     }
 }
 
-fn chudnovsky(iterations: usize, digits: usize) -> DBig {
+pub fn chudnovsky(iterations: usize, digits: usize) -> FBig<Zero, 10> {
 
-    let precision = (digits as f64 * 1.2).ceil() as usize;
-    let context = Context::<HalfAway>::new(precision);
+    // ensure at least 2 iterations to get a valid result
+    let iterations = iterations.max(2);
 
+    // more precision is needed in order to avoid error propagation
+    let precision = digits+2;
+
+    let context = Context::<Zero>::new(precision);
     let q = context.sqrt(dbig!(10005).repr()).value();
+
     let (_p1n, q1n, r1n) = binary_split(1, iterations);
 
     let n = ibig!(426880) * &q * &q1n;
@@ -71,27 +77,17 @@ fn chudnovsky(iterations: usize, digits: usize) -> DBig {
 
     let r = n / d;
 
-    println!("Pi: {} ", r);
-
-
-    let r = r.with_precision(digits);
-    
-    println!("{:?}", r);
-
-    r.value()
+    r
 }
 
-fn chudnovsky_iterations(digits: usize) -> usize {
+pub fn chudnovsky_iterations(digits: usize) -> usize {
     // Ogni iterazione dà circa 14.181647462 cifre decimali
     const DIGITS_PER_TERM: f64 = 14.181647462;
     ((digits as f64) / DIGITS_PER_TERM).ceil() as usize
 }
 
-pub fn compute_pi(digits: usize) -> DBig {
+pub fn compute_pi(digits: usize) -> String {
+
     let iterations = chudnovsky_iterations(digits);
-
-    println!("Iterations: {}", iterations);
-    println!("Digits: {}", digits);
-
-    chudnovsky(iterations, digits)
+    chudnovsky(iterations, digits).to_string()[..digits + 2].to_string()
 }
