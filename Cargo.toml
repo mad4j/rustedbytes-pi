@@ -4,6 +4,12 @@ version = "0.1.0"
 edition = "2024"
 description = "Computes digits of Pi using the Chudnovsky algorithm"
 authors = ["Daniele Olmisani <daniele.olmisani@gmail.com>"]
+license = "GPL-3.0"
+repository = "https://github.com/mad4j/howlast"
+homepage = "https://github.com/mad4j/howlast"
+keywords = ["pi", "chudnovsky", "mathematics", "computation", "rust"]
+categories = ["science", "mathematics", "algorithms", "numerical-computation", "cli-tools"]
+readme = "README.md"
 
 [dependencies]
 dashu = "0.4"
