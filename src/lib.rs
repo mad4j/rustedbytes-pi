@@ -43,7 +43,6 @@ for n in range(2,10):
 /// for the given range [a, b].
 /// The binary split method is used to optimize the computation.
 pub fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
-
     // Base case: if the range contains only one element
     if b - a == 1 {
         // Compute Pab, Qab, and Rab for the single element

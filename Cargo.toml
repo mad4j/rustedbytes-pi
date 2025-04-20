@@ -2,6 +2,8 @@
 name = "rustedbytes-pi"
 version = "0.1.0"
 edition = "2024"
+description = "Computes digits of Pi using the Chudnovsky algorithm"
+authors = ["Daniele Olmisani <daniele.olmisani@gmail.com>"]
 
 [dependencies]
 dashu = "0.4"

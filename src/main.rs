@@ -2,11 +2,13 @@ use clap::Parser;
 use rustedbytes_pi::compute_pi;
 
 #[derive(Parser)]
-#[command(name = "RustedBytes Pi")]
-#[command(about = "Computes digits of Pi")]
-#[command(long_about = "Computes digits of Pi using the Chudnovsky algorithm")]
-#[command(version = "1.0")]
-#[command(author = "Daniele Olmisani <daniele.olmisani@gmail.com>")]
+#[command(
+    name = env!("CARGO_PKG_NAME"),
+    about = env!("CARGO_PKG_DESCRIPTION"),
+    long_about = env!("CARGO_PKG_DESCRIPTION"),
+    version = env!("CARGO_PKG_VERSION"),
+    author = env!("CARGO_PKG_AUTHORS")
+)]
 struct Cli {
     /// Number of digits to compute
     #[arg(short, long, default_value_t = 1_000_000)]
@@ -48,7 +50,6 @@ fn compare_pi(pi: &str) -> bool {
 }
 
 fn main() {
-
     // Parse command line arguments
     let args = Cli::parse();
 
@@ -69,8 +70,8 @@ fn main() {
     if args.verify {
         if pi.len() > get_pi_digits().len() {
             println!(
-            "Warning: Only the first {} digits will be verified.",
-            get_pi_digits().len()
+                "Warning: Only the first {} digits will be verified.",
+                get_pi_digits().len()
             );
         }
         compare_pi(&pi);
