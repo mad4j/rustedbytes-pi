@@ -78,8 +78,6 @@ pub fn chudnovsky(iterations: usize, digits: usize) -> FBig<Zero, 10> {
     // Ensure at least 2 iterations to get a valid result
     let iterations = iterations.max(2);
 
-    println!("Iterations: {}", iterations);
-
     // More precision is needed in order to avoid error propagation
     let precision = digits + 2;
 
