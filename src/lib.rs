@@ -18,7 +18,7 @@ def binary_split(a, b):
         m = (a + b) // 2
         Pam, Qam, Ram = binary_split(a, m)
         Pmb, Qmb, Rmb = binary_split(m, b)
-        
+
         Pab = Pam * Pmb
         Qab = Qam * Qmb
         Rab = Qmb * Ram + Pam * Rmb
@@ -38,16 +38,19 @@ for n in range(2,10):
     print(f"{n} = {chudnovsky(n)}")  # 3.14159265358979323846264338...
  */
 
-
+/// Compute the binary split for the Chudnovsky algorithm.
+/// This function recursively computes the values of Pab, Qab, and Rab
+/// for the given range [a, b].
+/// The binary split method is used to optimize the computation.
 pub fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
+
     // Base case: if the range contains only one element
     if b - a == 1 {
-        let a = IBig::from(a);
-
         // Compute Pab, Qab, and Rab for the single element
-        let pab = -(ibig!(6) * &a - ibig!(5)) * (ibig!(2) * &a - ibig!(1)) * (ibig!(6) * &a - ibig!(1));
+        let pab =
+            -(ibig!(6) * a - ibig!(5)) * (ibig!(2) * a - ibig!(1)) * (ibig!(6) * a - ibig!(1));
         let qab = ibig!(10939058860032000) * a.pow(3);
-        let rab = &pab * (ibig!(545140134) * &a + ibig!(13591409));
+        let rab = &pab * (ibig!(545140134) * a + ibig!(13591409));
 
         // Return the computed values
         (pab, qab, rab)
@@ -71,8 +74,8 @@ pub fn binary_split(a: usize, b: usize) -> (IBig, IBig, IBig) {
     }
 }
 
+/// Compute the Chudnovsky algorithm for Pi with the specified number of iterations and digits.
 pub fn chudnovsky(iterations: usize, digits: usize) -> FBig<Zero, 10> {
-
     // Ensure at least 2 iterations to get a valid result
     let iterations = iterations.max(2);
 
@@ -93,17 +96,19 @@ pub fn chudnovsky(iterations: usize, digits: usize) -> FBig<Zero, 10> {
         || ibig!(13591409) * &q1n + &r1n,
     );
 
-    let r = n / d;
-
-    r
+    n / d
 }
 
+/// Calculate the number of iterations needed for the Chudnovsky algorithm
+/// to achieve the desired number of digits.
 pub fn chudnovsky_iterations(digits: usize) -> usize {
     // Each iteration gives approximately 14.181647462 decimal digits
     const DIGITS_PER_TERM: f64 = 14.181647462;
     ((digits as f64) / DIGITS_PER_TERM).ceil() as usize
 }
 
+/// Compute the digits of Pi using the Chudnovsky algorithm.
+/// The result is a string representation of Pi with the specified number of digits.
 pub fn compute_pi(digits: usize) -> String {
     // Compute the number of iterations needed for the Chudnovsky algorithm
     // to achieve the desired number of digits
