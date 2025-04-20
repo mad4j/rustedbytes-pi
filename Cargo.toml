@@ -8,7 +8,7 @@ license = "GPL-3.0"
 repository = "https://github.com/mad4j/howlast"
 homepage = "https://github.com/mad4j/howlast"
 keywords = ["pi", "chudnovsky", "mathematics", "computation", "rust"]
-categories = ["science", "mathematics", "algorithms", "numerical-computation", "cli-tools"]
+categories = ["science", "mathematics", "algorithms"]
 readme = "README.md"
 
 [dependencies]
