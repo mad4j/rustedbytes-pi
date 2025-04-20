@@ -71,7 +71,7 @@ fn main() {
         if pi.len() > get_pi_digits().len() {
             println!(
                 "Warning: Only the first {} digits will be verified.",
-                get_pi_digits().len()
+                get_pi_digits().len()-2
             );
         }
         compare_pi(&pi);
